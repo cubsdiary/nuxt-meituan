@@ -26,6 +26,7 @@ async function start() {
     if (/api\//.test(ctx.request.url)) {
       await next()
     } else {
+      console.log(ctx.request.url)
       ctx.status = 200
       return new Promise((resolve, reject) => {
         ctx.res.on('close', resolve)
@@ -37,7 +38,7 @@ async function start() {
       })
     }
   })
-  app.use(router.routes())
+  app.use(router.routes()).use(router.allowedMethods())
 
   app.listen(port, host)
   consola.ready({
