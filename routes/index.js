@@ -1,5 +1,5 @@
 const router = require('koa-router')({
-    prefix: '/api'
+  prefix: '/api'
 })
 
 router.get('/demo', (ctx, next) => {
@@ -16,7 +16,6 @@ router.get('/demo', (ctx, next) => {
 })
 
 router.get('/', (ctx, next) => {
-  console.log(ctx)
   ctx.body = {
     success: 'ok',
     state: 200,

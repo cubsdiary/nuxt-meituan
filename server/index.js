@@ -1,4 +1,3 @@
-
 const Koa = require('koa')
 const consola = require('consola')
 const router = require('../routes')
@@ -38,7 +37,6 @@ async function start() {
       })
     }
   })
-
   app.use(router.routes())
 
   app.listen(port, host)
