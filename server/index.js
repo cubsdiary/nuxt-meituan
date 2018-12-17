@@ -1,6 +1,6 @@
 const Koa = require('koa')
 const consola = require('consola')
-const router = require('../routes')
+const router = require('./routes')
 const { Nuxt, Builder } = require('nuxt')
 
 const app = new Koa()

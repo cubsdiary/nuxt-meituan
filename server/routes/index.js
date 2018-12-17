@@ -1,3 +1,4 @@
+const User = require('../controllers/user')
 const router = require('koa-router')({
   prefix: '/api'
 })
@@ -15,12 +16,5 @@ router.get('/demo', (ctx, next) => {
   }
 })
 
-router.get('/', (ctx, next) => {
-  ctx.body = {
-    success: 'ok',
-    state: 200,
-    data: 'hello'
-  }
-})
-
+router.get('/user/login', User.login)
 module.exports = router
