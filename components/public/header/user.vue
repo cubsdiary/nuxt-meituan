@@ -4,7 +4,7 @@
       欢迎您，<span class="username">
         {{ user }}
       </span>
-      <nuxt-link to="/exit">
+      <nuxt-link to="/api/user/exit">
         退出
       </nuxt-link>
     </template>
@@ -30,6 +30,15 @@ export default {
   data() {
     return {
       user: ''
+    }
+  },
+  async mounted() {
+    const {
+      status,
+      data: { user }
+    } = await this.$axios.get('http://127.0.0.1:3000/api/user/userinfo')
+    if (status === 200) {
+      this.user = user
     }
   }
 }

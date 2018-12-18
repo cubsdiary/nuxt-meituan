@@ -1,30 +1,33 @@
-exports default {
-  dbs: 'mongodb://127.0.0.1:27017/meituan',
+module.exports = {
+  dbs: 'mongodb://yangjing:1225659856@127.0.0.1:27017/meituan',
   redis: {
-    get host () {
+    get host() {
       return '127.0.0.1'
     },
-    get port () {
+    get port() {
       return 6379
     }
   },
-  smtp:{
-    get host(){
+  smtp: {
+    get host() {
       return 'smtp.qq.com'
     },
-    get user(){
+    get user() {
       return '1225659856@qq.com'
     },
-    get pass(){
+    get pass() {
       return 'gmnydjdpcnxuijhd'
     },
-    get code(){
-      return ()=>{
-        return Math.random().toString(16).slice(2, 6).toUpperCase()
+    get code() {
+      return () => {
+        return Math.random()
+          .toString(16)
+          .slice(2, 6)
+          .toUpperCase()
       }
     },
-    get expire(){
-      return ()=>{
+    get expire() {
+      return () => {
         return new Date().getTime() + 60 * 60 * 1000
       }
     }

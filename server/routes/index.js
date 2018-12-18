@@ -16,5 +16,9 @@ router.get('/demo', (ctx, next) => {
   }
 })
 
-router.get('/user/login', User.login)
+router.post('/user/verify', User.verify)
+router.post('/user/signup', User.signup)
+router.post('/user/signin', User.signin)
+router.get('/user/exit', User.exit)
+router.get('/user/userinfo', User.getUser)
 module.exports = router

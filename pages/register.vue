@@ -11,12 +11,12 @@
             已有美团账号？
           </em>
           <a href="/login">
-            <el-button
+            <ElButton
               type="primary"
               size="small"
             >
               登录
-            </el-button>
+            </ElButton>
           </a>
         </span>
       </header>
@@ -166,12 +166,72 @@ export default {
   layout: 'blank',
   methods: {
     sendMsg() {
-      const data2 = CryptoJS.MD5('woshiwangbadan')
-      const data = CryptoJS.MD5('woshiwangbadan').toString()
-      console.log('//////////////data2/////', data2)
-      console.log('//////////////data/////', data)
+      const self = this
+      let namePass
+      let emailPass
+      if (self.timerid) {
+        return false
+      }
+      this.$refs['ruleForm'].validateField('name', valid => {
+        namePass = valid
+      })
+      self.statusMsg = ''
+      if (namePass) {
+        return false
+      }
+      this.$refs['ruleForm'].validateField('email', valid => {
+        emailPass = valid
+      })
+      if (!namePass && !emailPass) {
+        self.$axios
+          .post('http://127.0.0.1:3000/api/user/verify', {
+            username: encodeURIComponent(self.ruleForm.name),
+            email: self.ruleForm.email
+          })
+          .then(({ status, data }) => {
+            if (status === 200 && data && data.code === 0) {
+              let count = 60
+              self.statusMsg = `验证码已发送,剩余${count--}秒`
+              self.timerid = setInterval(function() {
+                self.statusMsg = `验证码已发送,剩余${count--}秒`
+                if (count === 0) {
+                  clearInterval(self.timerid)
+                }
+              }, 1000)
+            } else {
+              self.statusMsg = data.msg
+            }
+          })
+      }
     },
-    register() {}
+    register() {
+      let self = this
+      this.$refs['ruleForm'].validate(valid => {
+        if (valid) {
+          self.$axios
+            .post('http://127.0.0.1:3000/api/user/signup', {
+              username: window.encodeURIComponent(self.ruleForm.name),
+              password: self.ruleForm.pwd,
+              email: self.ruleForm.email,
+              code: self.ruleForm.code
+            })
+            .then(({ status, data }) => {
+              if (status === 200) {
+                if (data && data.code === 0) {
+                  location.href = '/login'
+                } else {
+                  self.error = data.msg
+                }
+              } else {
+                self.error = `服务器出错，错误码:${status}`
+              }
+              setTimeout(function() {
+                self.error = ''
+              }, 1500)
+            })
+        }
+      })
+    }
   }
 }
 </script>

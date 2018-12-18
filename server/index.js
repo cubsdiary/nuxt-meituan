@@ -1,17 +1,37 @@
 const Koa = require('koa')
 const consola = require('consola')
 const router = require('./routes')
+const mongoDB = require('./dbs/init')
+const bodyParser = require('koa-bodyparser')
+const session = require('koa-generic-session')
+const Redis = require('koa-redis')
+const passport = require('./util/passport')
+const dbConfig = require('./dbs/config')
 const { Nuxt, Builder } = require('nuxt')
 
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
 
+app.keys = ['mt', 'nuxt meituan']
+app.proxy = true
+app.use(session({ key: 'mt', prefix: 'mt:uid', store: new Redis() }))
+
+app.use(
+  bodyParser({
+    extendTypes: ['json', 'form', 'text']
+  })
+)
+
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
 config.dev = !(app.env === 'production')
 
 async function start() {
+  await mongoDB.connect(dbConfig.dbs)
+
+  app.use(passport.initialize())
+  app.use(passport.session())
   // Instantiate nuxt.js
   const nuxt = new Nuxt(config)
 
@@ -27,6 +47,7 @@ async function start() {
       await next()
     } else {
       ctx.status = 200
+      ctx.cookies.set('name', 'tobi')
       return new Promise((resolve, reject) => {
         ctx.res.on('close', resolve)
         ctx.res.on('finish', resolve)

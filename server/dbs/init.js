@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const {resolve} = require('path')
+const { resolve } = require('path')
 const glob = require('glob')
 
 const options = {
@@ -8,26 +8,31 @@ const options = {
 
 mongoose.Promise = global.Promise
 
-exports.initSchema = () => {
-  glob.sync(resolve(__dirname, './schema', '**/*.js'))
-  .forEach(require)
-}
+// exports.initSchema = async () => {
+//   glob.sync(resolve(__dirname, './schema', '**/*.js'))
+//   .forEach(require)
+// }
 
-exports.connect = (db) => {
+exports.connect = db => {
   return new Promise((resolve, reject) => {
-
-    let MaxConnection = 0
+    let MaxConnectTimes = 0
     if (process.env.NODE_ENV !== 'production') {
       mongoose.set('debug', true)
     }
 
-    mongoose.connect(db, options)
+    mongoose.connect(
+      db,
+      options
+    )
 
     mongoose.connection.on('disconnect', () => {
       MaxConnectTimes++
 
       if (MaxConnectTimes < 5) {
-        mongoose.connect(db, options)
+        mongoose.connect(
+          db,
+          options
+        )
       } else {
         throw new Error('数据库挂了')
       }
@@ -37,7 +42,10 @@ exports.connect = (db) => {
       MaxConnectTimes++
 
       if (MaxConnectTimes < 5) {
-        mongoose.connect(db, options)
+        mongoose.connect(
+          db,
+          options
+        )
       } else {
         throw new Error(err)
       }
