@@ -47,7 +47,6 @@ async function start() {
       await next()
     } else {
       ctx.status = 200
-      ctx.cookies.set('name', 'tobi')
       return new Promise((resolve, reject) => {
         ctx.res.on('close', resolve)
         ctx.res.on('finish', resolve)

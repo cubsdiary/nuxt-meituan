@@ -4,7 +4,7 @@
       欢迎您，<span class="username">
         {{ user }}
       </span>
-      <nuxt-link to="/api/user/exit">
+      <nuxt-link to="/exit">
         退出
       </nuxt-link>
     </template>

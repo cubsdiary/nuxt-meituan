@@ -9,7 +9,6 @@ const User = require('../dbs/schema/user')
 let Store = new Redis().client
 
 exports.verify = async (ctx, next) => {
-  console.log('///// 发送邮箱 /////')
   let username = ctx.request.body.username
   const saveExpire = await Store.hget(`nodemail:${username}`, 'expire')
   if (saveExpire && new Date().getTime() - saveExpire < 0) {
@@ -126,6 +125,7 @@ exports.signup = async (ctx, next) => {
 
 exports.signin = async (ctx, next) => {
   return Passport.authenticate('local', function(err, user, info, status) {
+    console.log(user, info, status)
     if (err) {
       ctx.body = {
         code: -1,
@@ -138,6 +138,7 @@ exports.signin = async (ctx, next) => {
           msg: '登录成功',
           user
         }
+        console.log(ctx.session)
         return ctx.login(user)
       } else {
         ctx.body = {
@@ -163,6 +164,7 @@ exports.exit = async (ctx, next) => {
 }
 
 exports.getUser = async (ctx, next) => {
+  console.log(ctx.session)
   if (ctx.isAuthenticated()) {
     const { username, email } = ctx.session.passport.user
     ctx.body = {
