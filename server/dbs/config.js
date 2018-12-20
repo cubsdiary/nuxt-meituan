@@ -31,5 +31,10 @@ module.exports = {
         return new Date().getTime() + 60 * 60 * 1000
       }
     }
+  },
+  ipSearch: {
+    AppKey: 25415619,
+    AppSecret: '97ac69274e65c70b3058a2f77c14c026',
+    AppCode: 'f4ee00755d5740dfb2e7d06da97e0798'
   }
 }

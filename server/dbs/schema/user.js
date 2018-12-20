@@ -1,12 +1,4 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-
-// 加密权重
-const SALT_WORK_FACTOR = 10
-// 登录的最大失败尝试次数
-const MAX_LOGIN_ATTEMPTS = 5
-// 登录失败锁定时间
-const LOCK_TIME = 2 * 60 * 60 * 1000
 
 const Schema = mongoose.Schema
 
@@ -47,4 +39,3 @@ UserSchema.pre('save', function(next) {
   next()
 })
 module.exports = mongoose.model('User', UserSchema)
-// const User = mongoose.model('User', UserSchema)

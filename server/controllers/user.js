@@ -1,4 +1,3 @@
-const mongoose = require('mongoose')
 const Redis = require('koa-redis')
 const nodeMailer = require('nodemailer')
 const Passport = require('../util/passport')
@@ -102,7 +101,6 @@ exports.signup = async (ctx, next) => {
   newuser = await newuser.save()
   if (newuser) {
     let res = await axios.post('/api/user/signin', { username, password })
-    console.log(res)
     if (res.data && res.data.code === 0) {
       ctx.body = {
         code: 0,
@@ -138,7 +136,6 @@ exports.signin = async (ctx, next) => {
           msg: '登录成功',
           user
         }
-        console.log(ctx.session)
         return ctx.login(user)
       } else {
         ctx.body = {
@@ -164,7 +161,6 @@ exports.exit = async (ctx, next) => {
 }
 
 exports.getUser = async (ctx, next) => {
-  console.log(ctx.session)
   if (ctx.isAuthenticated()) {
     const { username, email } = ctx.session.passport.user
     ctx.body = {

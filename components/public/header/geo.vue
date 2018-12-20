@@ -1,7 +1,7 @@
 <template>
   <div class="m-geo">
     <i class="el-icon-location">
-      北京市
+      {{ $store.state.geo.position.city }}
     </i>
     <nuxt-link 
       class="changeCity"
