@@ -20,10 +20,13 @@ export default {
     }
   },
   async mounted() {
-    // let {status,data:{hots}}=await this.$axios.get('/geo/hotCity')
-    // if(status===200){
-    //   this.list=hots
-    // }
+    let {
+      status,
+      data: { hots }
+    } = await this.$axios.get('http://127.0.0.1:3000/api/info/hotcity')
+    if (status === 200) {
+      this.list = hots
+    }
   }
 }
 </script>

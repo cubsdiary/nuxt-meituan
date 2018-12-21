@@ -49,22 +49,62 @@ export default {
     }
   },
   watch: {
-    async pvalue(newPvalue) {}
+    async pvalue(newPvalue) {
+      let self = this
+      let {
+        status,
+        data: { city }
+      } = await self.$axios.get(
+        `http://127.0.0.1:3000/api/info/province/${newPvalue}`
+      )
+      if (status === 200) {
+        self.city = city.map(item => {
+          return {
+            value: item.id,
+            label: item.name
+          }
+        })
+        self.cvalue = ''
+      }
+    }
   },
   async mounted() {
-    // let self=this;
-    // let {status,data:{province}}=await self.$axios.get('/geo/province')
-    // if(status===200){
-    //   self.province=province.map(item=>{
-    //     return {
-    //       value:item.id,
-    //       label:item.name
-    //     }
-    //   })
-    // }
+    let self = this
+    let {
+      status,
+      data: { province }
+    } = await self.$axios.get('http://127.0.0.1:3000/api/info/province')
+    if (status === 200) {
+      self.province = province.map(item => {
+        return {
+          value: item.id,
+          label: item.name
+        }
+      })
+    }
   },
   methods: {
-    querySearchAsync() {},
+    querySearchAsync: _.debounce(async function(query, cb) {
+      let self = this
+      if (self.cities.length) {
+        cb(self.cities.filter(item => item.value.indexOf(query) > -1))
+      } else {
+        let {
+          status,
+          data: { city }
+        } = await self.$axios.get('http://127.0.0.1:3000/api/info/city')
+        if (status === 200) {
+          self.cities = city.map(item => {
+            return {
+              value: item.name
+            }
+          })
+          cb(self.cities.filter(item => item.value.indexOf(query) > -1))
+        } else {
+          cb([])
+        }
+      }
+    }, 200),
     handleSelect(item) {
       console.log(item.value)
     }
